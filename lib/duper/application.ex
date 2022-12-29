@@ -8,7 +8,8 @@ defmodule Duper.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      Duper.Results
+      Duper.Results,
+      {Duper.PathFinder, "."}
     ]
 
     opts = [strategy: :one_for_one, name: Duper.Supervisor]
