@@ -11,7 +11,6 @@ defmodule Duper.MixProject do
     ]
   end
 
-  # Run "mix help compile.app" to learn about applications.
   def application do
     [
       extra_applications: [:logger],
@@ -19,10 +18,11 @@ defmodule Duper.MixProject do
     ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      dir_walker: "~> 0.0.8"
+      {:credo, "~> 1.6.7", only: [:dev, :test], runtime: false},
+      {:credo_contrib, "~> 0.2.0", only: [:dev, :test], runtime: false},
+      {:dir_walker, "~> 0.0.8"}
     ]
   end
 end
