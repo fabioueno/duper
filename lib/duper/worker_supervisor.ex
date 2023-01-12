@@ -1,4 +1,8 @@
 defmodule Duper.WorkerSupervisor do
+  @moduledoc """
+  Manage the worker servers, and allow for adding servers dinamically.
+  """
+
   use DynamicSupervisor
 
   # API
@@ -11,7 +15,7 @@ defmodule Duper.WorkerSupervisor do
     {:ok, _pid} = DynamicSupervisor.start_child(__MODULE__, Duper.Worker)
   end
 
-  # Server
+  # DynamicSupervisor Callbacks
 
   def init(:no_args) do
     DynamicSupervisor.init(strategy: :one_for_one)

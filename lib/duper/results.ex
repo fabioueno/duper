@@ -1,7 +1,12 @@
 defmodule Duper.Results do
+  @moduledoc """
+  Holds the results of the scanning in memory.
+  """
+
   use GenServer
 
   # API
+
   def start_link(_) do
     GenServer.start_link(__MODULE__, :no_args, name: __MODULE__)
   end
@@ -14,7 +19,7 @@ defmodule Duper.Results do
     GenServer.call(__MODULE__, :find_duplicates)
   end
 
-  # Server
+  # GenServer Callbacks
 
   def init(:no_args) do
     {:ok, %{}}
@@ -22,13 +27,14 @@ defmodule Duper.Results do
 
   def handle_cast({:add, path, hash}, results) do
     results = Map.update(results, hash, [path], fn existing -> [path | existing] end)
-
     {:noreply, results}
   end
 
   def handle_call(:find_duplicates, _from, results) do
     {:reply, hashes_with_more_than_one_path(results), results}
   end
+
+  # Private functions
 
   defp hashes_with_more_than_one_path(results) do
     results

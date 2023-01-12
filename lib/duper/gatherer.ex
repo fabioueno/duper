@@ -1,4 +1,9 @@
 defmodule Duper.Gatherer do
+  @moduledoc """
+  The server that both starts and determines when things have completed. When
+  they do, it fetches the results and reports on them.
+  """
+
   use GenServer
 
   # API
@@ -15,7 +20,7 @@ defmodule Duper.Gatherer do
     GenServer.cast(__MODULE__, {:result, path, hash})
   end
 
-  # Server
+  # GenServer Callbacks
 
   def init(worker_count) do
     Process.send_after(self(), :kickoff, 0)
@@ -37,16 +42,14 @@ defmodule Duper.Gatherer do
   end
 
   def handle_info(:kickoff, worker_count) do
-    1..worker_count
-    |> Enum.each(fn _ -> Duper.WorkerSupervisor.add_worker() end)
-
+    Enum.each(1..worker_count, fn _ -> Duper.WorkerSupervisor.add_worker() end)
     {:noreply, worker_count}
   end
 
+  # Private functions
+
   defp report_results do
     IO.puts("Results:\n")
-
-    Duper.Results.find_duplicates()
-    |> Enum.each(&IO.inspect/1)
+    Enum.each(Duper.Results.find_duplicates(), &IO.inspect/1)
   end
 end
